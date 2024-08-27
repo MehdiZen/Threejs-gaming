@@ -5,10 +5,26 @@
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <link rel="stylesheet" href="./src/style.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite + TS</title>
+    <title>CoBCs: L'appel du champ de bataille contre attaque</title>
   </head>
   <body>
-    <div id="app"></div>
+    <div id="app"><svg version="1.1" id="Crosshair" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="150px" height="150px" viewBox="-10 -10 20 20">
+      <g>
+        <g>
+          <path d="M 7, 0 A 7, 7 0 1,0 0,7" stroke-width="0.5" stroke="rgba(0, 255, 255, .5)" fill="transparent">
+            <animateTransform attributeType="xml" attributeName="transform" type="rotate" from="360 0 0" to="0 0 0" dur="4s" repeatCount="indefinite" />
+          </path>
+          <path d="M 8, 0 A 8, 8 0 1,0 0,8" stroke-width="2" stroke="rgba(0, 255, 255, .25)" fill="transparent">
+            <animateTransform attributeType="xml" attributeName="transform" type="rotate" from="0 0 0" to="360 0 0" dur="6s" repeatCount="indefinite" />
+          </path>
+          <line x1="-3" y1="0" x2="-1" y2="0" stroke="#0ff" />
+          <line x1="3" y1="0" x2="1" y2="0" stroke="#0ff" />
+          <line x1="0" y1="-3" x2="0" y2="-1" stroke="#0ff" />
+          <line x1="0" y1="3" x2="0" y2="1" stroke="#0ff" />
+        </g>
+      </g>
+    </svg>
+    </div>
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>
