@@ -2,11 +2,16 @@ import { sceneSetup } from './sceneSetup';
 import { controlsSetup } from './controlsSetup';
 import { animate } from './animate';
 
-const { scene, camera, renderer, wall } = sceneSetup();
+const { scene, camera, renderer, wallUp, wallBack, wallLeft, wallRight, firstRoomWallLeft, firstRoomWallRight, } = sceneSetup();
 const fps = controlsSetup(camera, renderer.domElement);
 
 renderer.setAnimationLoop(() => {
-  animate(wall, camera);
+  animate(wallUp,
+    wallLeft,
+    wallRight,
+    wallBack,
+    firstRoomWallRight,
+    firstRoomWallLeft, camera);
   renderer.render(scene, camera);
 });
 
