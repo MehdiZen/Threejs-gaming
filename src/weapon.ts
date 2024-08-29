@@ -38,3 +38,4 @@ export function createWeapon(): THREE.Mesh[] {
   fullWeapon.push(arm, cross, barrel, barrelOutline, crossOutline, armOutline)
   return fullWeapon;
 }
+

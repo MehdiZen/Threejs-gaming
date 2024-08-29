@@ -2,6 +2,9 @@ import * as THREE from "three";
 import { createWeapon } from "./weapon";
 import { FontLoader } from "three/examples/jsm/loaders/FontLoader";
 import { TextGeometry } from "three/examples/jsm/geometries/TextGeometry";
+import { addSphereEntityToScene, SphereEntity } from "./entity.ts";
+import { controlsSetup } from "./controlsSetup.ts";
+import { PointerLockControls } from "three/examples/jsm/controls/PointerLockControls";
 let stage = 1;
 
 function createTextMesh(
@@ -28,11 +31,11 @@ export function sceneSetup() {
     0.1,
     1000
   );
-
+  const bullets: THREE.Mesh[] = []; 
   const renderer = new THREE.WebGLRenderer();
   renderer.setSize(window.innerWidth, window.innerHeight);
   document.body.appendChild(renderer.domElement);
-  
+
   //Wall creation
   const xwallGeometry = new THREE.BoxGeometry(10, 2, 1);
   const zwallGeometry = new THREE.BoxGeometry(1, 2, 10);
@@ -42,8 +45,7 @@ export function sceneSetup() {
 
   const materialBlack = new THREE.MeshBasicMaterial({ color: 0x000000 });
   const materialBlue = new THREE.MeshBasicMaterial({ color: 0x0000ff });
-  const materialGreen = new THREE.MeshBasicMaterial({ color: 0x00ff00  });
-
+  const materialGreen = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
 
   const wallUp = new THREE.Mesh(xwallGeometry, materialBlue);
   const wallLeft = new THREE.Mesh(zwallGeometry, materialBlue);
@@ -52,18 +54,29 @@ export function sceneSetup() {
   const firstRoomWallRight = new THREE.Mesh(zwallGeometry, materialBlack);
   const firstRoomWallLeft = new THREE.Mesh(zwallGeometry, materialBlack);
   const crouchWall = new THREE.Mesh(smallWallGeometry, materialGreen);
-  const shootWall = new THREE.Mesh(shootWallGeometry, materialGreen)
+  const shootWall = new THREE.Mesh(shootWallGeometry, materialGreen);
 
   //Targets creation
 
-  const targetGeometry = new THREE.SphereGeometry( 1, 36, 16 ); 
-  const targetMaterial = new THREE.MeshBasicMaterial( { color: 0xff0000 } ); 
-  
-  const firstTarget = new THREE.Mesh( targetGeometry, targetMaterial );
-  const secondTarget = new THREE.Mesh( targetGeometry, targetMaterial ); 
-  const thirdTarget = new THREE.Mesh( targetGeometry, targetMaterial ); 
+  // const targetGeometry = new THREE.SphereGeometry( 1, 36, 16 );
+  // const targetMaterial = new THREE.MeshBasicMaterial( { color: 0xff0000 } );
 
-  
+  const firstTarget: SphereEntity = addSphereEntityToScene(
+    scene,
+    new THREE.Vector3(6, 6, -35)
+  );
+  const secondTarget: SphereEntity = addSphereEntityToScene(
+    scene,
+    new THREE.Vector3(-12, 6, -60)
+  );
+  const thirdTarget: SphereEntity = addSphereEntityToScene(
+    scene,
+    new THREE.Vector3(0, 2, -35)
+  );
+
+  // const firstTarget = new THREE.Mesh( targetGeometry, targetMaterial );
+  // const secondTarget = new THREE.Mesh( targetGeometry, targetMaterial );
+  // const thirdTarget = new THREE.Mesh( targetGeometry, targetMaterial );
 
   const raycaster = new THREE.Raycaster();
   raycaster.ray.origin.copy(camera.position);
@@ -79,19 +92,19 @@ export function sceneSetup() {
   crouchWall.position.set(-5, 1, -5);
   shootWall.position.set(-5, 0.05, -10);
   // Targets
-  firstTarget.position.set(-6, 6, -35 )
-  secondTarget.position.set(-12, 6, -60 )
-  thirdTarget.position.set(0, 2, -35 )
+  // firstTarget.position.set(-6, 6, -35 )
+  // secondTarget.position.set(-12, 6, -60 )
+  // thirdTarget.position.set(0, 2, -35 )
 
-  const levelOneTargets = []
-  levelOneTargets.push(firstTarget, secondTarget, thirdTarget)
+  const levelOneTargets = [];
+  levelOneTargets.push(firstTarget, secondTarget, thirdTarget);
   const loader = new FontLoader();
   loader.load(
     "https://threejs.org/examples/fonts/helvetiker_regular.typeface.json",
     function (font) {
       const textMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff });
-      const mediumFont = 0.5
-      const smallFont = 0.15
+      const mediumFont = 0.5;
+      const smallFont = 0.15;
       if (stage === 1) {
         const wallUpText = createTextMesh(
           "Use WASD(ZQSD) to move",
@@ -109,9 +122,13 @@ export function sceneSetup() {
         );
         croucWallText.position.set(-1.2, 0, 0.6);
         crouchWall.add(croucWallText);
-
       } else if (stage === 2) {
-        const wallUpText = createTextMesh("Deja vu ?", font, textMaterial, mediumFont);
+        const wallUpText = createTextMesh(
+          "Deja vu ?",
+          font,
+          textMaterial,
+          mediumFont
+        );
         wallUpText.position.set(-4, 0, 0.6);
         wallUp.add(wallUpText);
       } else if (stage === 3) {
@@ -136,10 +153,25 @@ export function sceneSetup() {
   flashlight.target.updateMatrixWorld();
 
   const fullWeapon = createWeapon();
-
   camera.add(...fullWeapon);
+ // Le cauchemar
+  const cameraDirection = new THREE.Vector3();
+  const controls = new PointerLockControls(camera, renderer.domElement);
 
-  camera.position.set(0, 1, 5);
+  document.body.addEventListener("click", () => {
+    controls.getObject().getWorldDirection(cameraDirection)
+    let bullet = new THREE.Mesh(
+      new THREE.SphereGeometry(0.05, 16, 16),
+      new THREE.MeshBasicMaterial({ color: 0x00ff00 })
+    );
+    bullet.position.copy(controls.getObject().position.clone());
+    bullet.position.add(cameraDirection.clone().multiplyScalar(0.11)); 
+
+
+    bullet.userData = { direction: cameraDirection.clone().normalize() };
+
+    bullets.push(bullet);
+  });
 
   scene.add(
     camera,
@@ -152,10 +184,14 @@ export function sceneSetup() {
     firstRoomWallRight,
     crouchWall,
     shootWall,
-    ...levelOneTargets,
     plane
   );
 
+  levelOneTargets.forEach((x) => {
+    if (x.HP === 0) {
+      scene.remove(x.mesh);
+    }
+  });
   return {
     scene,
     camera,
@@ -168,6 +204,10 @@ export function sceneSetup() {
     firstRoomWallLeft,
     firstRoomWallRight,
     shootWall,
-    crouchWall
+    crouchWall,
+    ...fullWeapon,
+    ...levelOneTargets,
+    controls,
+    bullets
   };
 }
