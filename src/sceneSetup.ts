@@ -2,12 +2,19 @@ import * as THREE from "three";
 import { createWeapon } from "./weapon";
 import { FontLoader } from "three/examples/jsm/loaders/FontLoader";
 import { TextGeometry } from "three/examples/jsm/geometries/TextGeometry";
+let stage = 1;
 
-function createTextMesh(text: string, font: THREE.Font, material: THREE.Material) {
+function createTextMesh(
+  text: string,
+  // @ts-ignore comment
+  font: THREE.Font,
+  material: THREE.Material,
+  size: number
+) {
   const textGeometry = new TextGeometry(text, {
     font: font,
-    size: 0.5,
-    height: 0.1,
+    size: size,
+    depth: 0.01,
     curveSegments: 12,
   });
   return new THREE.Mesh(textGeometry, material);
@@ -25,44 +32,79 @@ export function sceneSetup() {
   const renderer = new THREE.WebGLRenderer();
   renderer.setSize(window.innerWidth, window.innerHeight);
   document.body.appendChild(renderer.domElement);
-  const xwallgeometry = new THREE.BoxGeometry(10, 2, 1);
-  const zwallgeometry = new THREE.BoxGeometry(1, 2, 10);
-  const firstBackWall = new THREE.BoxGeometry(15, 2, 1);
-
-
-  const materialGreen = new THREE.MeshBasicMaterial({ color: 0x000000 });
-  const materialRed = new THREE.MeshBasicMaterial({ color: 0xff0000 });
   
-  const wallUp = new THREE.Mesh(xwallgeometry, materialRed);
-  const wallLeft = new THREE.Mesh(zwallgeometry, materialRed);
-  const wallRight = new THREE.Mesh(zwallgeometry, materialRed);
-  const wallBack = new THREE.Mesh(firstBackWall, materialGreen);
-  const firstRoomWallRight = new THREE.Mesh(zwallgeometry, materialGreen);
-  const firstRoomWallLeft = new THREE.Mesh(zwallgeometry, materialGreen);
+  //Wall creation
+  const xwallGeometry = new THREE.BoxGeometry(10, 2, 1);
+  const zwallGeometry = new THREE.BoxGeometry(1, 2, 10);
+  const firstBackWallGeometry = new THREE.BoxGeometry(15, 2, 1);
+  const smallWallGeometry = new THREE.BoxGeometry(3, 0.5, 1);
+
+  const materialBlack = new THREE.MeshBasicMaterial({ color: 0x000000 });
+  const materialRed = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+  const materialGreen = new THREE.MeshBasicMaterial({ color: 0x00ff00  });
 
 
+  const wallUp = new THREE.Mesh(xwallGeometry, materialRed);
+  const wallLeft = new THREE.Mesh(zwallGeometry, materialRed);
+  const wallRight = new THREE.Mesh(zwallGeometry, materialRed);
+  const wallBack = new THREE.Mesh(firstBackWallGeometry, materialBlack);
+  const firstRoomWallRight = new THREE.Mesh(zwallGeometry, materialBlack);
+  const firstRoomWallLeft = new THREE.Mesh(zwallGeometry, materialBlack);
+  const crouchWall = new THREE.Mesh(smallWallGeometry, materialGreen);
 
   const raycaster = new THREE.Raycaster();
   raycaster.ray.origin.copy(camera.position);
   camera.getWorldDirection(raycaster.ray.direction);
-
+  
   wallUp.position.set(1, 0.5, 0);
   wallLeft.position.set(-7, 0.5, -5);
   wallRight.position.set(-3.5, 0.5, -5);
   wallBack.position.set(1, 0.5, 10);
   firstRoomWallLeft.position.set(-7, 0.5, 5);
   firstRoomWallRight.position.set(6.5, 0.5, 5);
-
-
-  const loader = new FontLoader();
-  loader.load('https://threejs.org/examples/fonts/helvetiker_regular.typeface.json', function (font) {
-    const textMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff });
-    
-    const wallUpText = createTextMesh("Use WASD(ZQSD) to move", font, textMaterial);
-    wallUpText.position.set(-4, 0, 0.6);
-    wallUp.add(wallUpText);
+  crouchWall.position.set(-5, 1, -5);
   
-  });
+  const loader = new FontLoader();
+  loader.load(
+    "https://threejs.org/examples/fonts/helvetiker_regular.typeface.json",
+    function (font) {
+      const textMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff });
+      const mediumFont = 0.5
+      const smallFont = 0.15
+      if (stage === 1) {
+        const wallUpText = createTextMesh(
+          "Use WASD(ZQSD) to move",
+          font,
+          textMaterial,
+          mediumFont
+        );
+        wallUpText.position.set(-4, 0, 0.6);
+        wallUp.add(wallUpText);
+        const croucWallText = createTextMesh(
+          "Ctrl to crouch, friend",
+          font,
+          textMaterial,
+          smallFont
+        );
+        croucWallText.position.set(-1.2, 0, 0.6);
+        crouchWall.add(croucWallText);
+
+      } else if (stage === 2) {
+        const wallUpText = createTextMesh("Deja vu ?", font, textMaterial, mediumFont);
+        wallUpText.position.set(-4, 0, 0.6);
+        wallUp.add(wallUpText);
+      } else if (stage === 3) {
+        const wallUpText = createTextMesh(
+          "You are not getting out",
+          font,
+          textMaterial,
+          mediumFont
+        );
+        wallUpText.position.set(-4, 0, 0.6);
+        wallUp.add(wallUpText);
+      }
+    }
+  );
 
   const plane = new THREE.GridHelper(1200, 1200, "blue", "green");
   plane.position.set(0, -0.5, 0);
@@ -72,13 +114,36 @@ export function sceneSetup() {
   camera.position.set(0, 1, 5);
   flashlight.target.updateMatrixWorld();
 
-  const weapon = createWeapon();
-  camera.add(weapon);
-  weapon.position.set(0.4, -0.5, -0.8);
+  const fullWeapon = createWeapon();
+
+  camera.add(...fullWeapon);
 
   camera.position.set(0, 1, 5);
 
-  scene.add(camera, light, wallUp, wallBack, wallLeft, wallRight, firstRoomWallLeft, firstRoomWallRight, plane);
+  scene.add(
+    camera,
+    light,
+    wallUp,
+    wallBack,
+    wallLeft,
+    wallRight,
+    firstRoomWallLeft,
+    firstRoomWallRight,
+    crouchWall,
+    plane
+  );
 
-  return { scene, camera, renderer, wallBack, wallUp, wallLeft, wallRight, firstRoomWallLeft, firstRoomWallRight };
+  return {
+    scene,
+    camera,
+    renderer,
+    stage,
+    wallBack,
+    wallUp,
+    wallLeft,
+    wallRight,
+    firstRoomWallLeft,
+    firstRoomWallRight,
+    crouchWall
+  };
 }

@@ -7,6 +7,7 @@ const wallRightBB = new THREE.Box3(new THREE.Vector3(), new THREE.Vector3());
 const wallBackBB = new THREE.Box3(new THREE.Vector3(), new THREE.Vector3());
 const firstRoomWallRightBB = new THREE.Box3(new THREE.Vector3(), new THREE.Vector3());
 const firstRoomWallLeftBB = new THREE.Box3(new THREE.Vector3(), new THREE.Vector3());
+const crouchWallBB = new THREE.Box3(new THREE.Vector3(), new THREE.Vector3());
 
 const cameraBB = new THREE.Box3(
   new THREE.Vector3(1, 1, 1),
@@ -20,6 +21,7 @@ export function animate(
   wallBack: THREE.Mesh,
   firstRoomWallRight: THREE.Mesh,
   firstRoomWallLeft: THREE.Mesh,
+  crouchWall: THREE.Mesh,
   camera: any
 ) {
   wallUpBB.setFromObject(wallUp, true);
@@ -28,6 +30,7 @@ export function animate(
   wallBackBB.setFromObject(wallBack, true);
   firstRoomWallRightBB.setFromObject(firstRoomWallRight, true);
   firstRoomWallLeftBB.setFromObject(firstRoomWallLeft, true);
+  crouchWallBB.setFromObject(crouchWall, true);
 
   cameraBB.setFromObject(camera, true);
 
@@ -38,6 +41,7 @@ export function animate(
     wallBackBB,
     firstRoomWallRightBB,
     firstRoomWallLeftBB,
+    crouchWallBB,
     cameraBB,
     camera
   );
