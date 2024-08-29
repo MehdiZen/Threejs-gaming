@@ -22,7 +22,7 @@ export function createWeapon(): THREE.Mesh[] {
   const barrelMaterial = new THREE.MeshBasicMaterial({ color: 0xFF00000 });
   const barrel = new THREE.Mesh(barrelGeometry, barrelMaterial);
 
-  const barrelOutlineGeometry = new THREE.BoxGeometry(0.16, 0.21, 0.5); 
+  const barrelOutlineGeometry = new THREE.BoxGeometry(0.16, 0.21, 0.51); 
   const barrelOutlineMaterial = new THREE.MeshBasicMaterial({ side: THREE.BackSide, color: 0x000000 });
   const barrelOutline = new THREE.Mesh(barrelOutlineGeometry, barrelOutlineMaterial);
 

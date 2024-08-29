@@ -38,24 +38,38 @@ export function sceneSetup() {
   const zwallGeometry = new THREE.BoxGeometry(1, 2, 10);
   const firstBackWallGeometry = new THREE.BoxGeometry(15, 2, 1);
   const smallWallGeometry = new THREE.BoxGeometry(3, 0.5, 1);
+  const shootWallGeometry = new THREE.BoxGeometry(4, 1.1, 1);
 
   const materialBlack = new THREE.MeshBasicMaterial({ color: 0x000000 });
-  const materialRed = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+  const materialBlue = new THREE.MeshBasicMaterial({ color: 0x0000ff });
   const materialGreen = new THREE.MeshBasicMaterial({ color: 0x00ff00  });
 
 
-  const wallUp = new THREE.Mesh(xwallGeometry, materialRed);
-  const wallLeft = new THREE.Mesh(zwallGeometry, materialRed);
-  const wallRight = new THREE.Mesh(zwallGeometry, materialRed);
+  const wallUp = new THREE.Mesh(xwallGeometry, materialBlue);
+  const wallLeft = new THREE.Mesh(zwallGeometry, materialBlue);
+  const wallRight = new THREE.Mesh(zwallGeometry, materialBlue);
   const wallBack = new THREE.Mesh(firstBackWallGeometry, materialBlack);
   const firstRoomWallRight = new THREE.Mesh(zwallGeometry, materialBlack);
   const firstRoomWallLeft = new THREE.Mesh(zwallGeometry, materialBlack);
   const crouchWall = new THREE.Mesh(smallWallGeometry, materialGreen);
+  const shootWall = new THREE.Mesh(shootWallGeometry, materialGreen)
+
+  //Targets creation
+
+  const targetGeometry = new THREE.SphereGeometry( 1, 36, 16 ); 
+  const targetMaterial = new THREE.MeshBasicMaterial( { color: 0xff0000 } ); 
+  
+  const firstTarget = new THREE.Mesh( targetGeometry, targetMaterial );
+  const secondTarget = new THREE.Mesh( targetGeometry, targetMaterial ); 
+  const thirdTarget = new THREE.Mesh( targetGeometry, targetMaterial ); 
+
+  
 
   const raycaster = new THREE.Raycaster();
   raycaster.ray.origin.copy(camera.position);
   camera.getWorldDirection(raycaster.ray.direction);
-  
+  // Position
+  // Wall
   wallUp.position.set(1, 0.5, 0);
   wallLeft.position.set(-7, 0.5, -5);
   wallRight.position.set(-3.5, 0.5, -5);
@@ -63,7 +77,14 @@ export function sceneSetup() {
   firstRoomWallLeft.position.set(-7, 0.5, 5);
   firstRoomWallRight.position.set(6.5, 0.5, 5);
   crouchWall.position.set(-5, 1, -5);
-  
+  shootWall.position.set(-5, 0.05, -10);
+  // Targets
+  firstTarget.position.set(-6, 6, -35 )
+  secondTarget.position.set(-12, 6, -60 )
+  thirdTarget.position.set(0, 2, -35 )
+
+  const levelOneTargets = []
+  levelOneTargets.push(firstTarget, secondTarget, thirdTarget)
   const loader = new FontLoader();
   loader.load(
     "https://threejs.org/examples/fonts/helvetiker_regular.typeface.json",
@@ -130,6 +151,8 @@ export function sceneSetup() {
     firstRoomWallLeft,
     firstRoomWallRight,
     crouchWall,
+    shootWall,
+    ...levelOneTargets,
     plane
   );
 
@@ -144,6 +167,7 @@ export function sceneSetup() {
     wallRight,
     firstRoomWallLeft,
     firstRoomWallRight,
+    shootWall,
     crouchWall
   };
 }

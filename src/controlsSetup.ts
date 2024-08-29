@@ -16,19 +16,23 @@ export function controlsSetup(
   });
 
   function userMovement(e: KeyboardEvent) {
-      // IF FOREST NO JUTSU
+    // IF FOREST NO JUTSU
     if (e.key === "Shift") {
       speedMultiplier = speedMultiplier === 1 ? 0.5 : 1;
     }
     if (e.key === "Control") {
       camera.position.y = camera.position.y === 1 ? 0.5 : 1;
     }
+    // debug mod
+  if (e.key === "m") {
+    speedMultiplier = speedMultiplier === 5 ? 1 : 5;
+  }
     if (e.key === " ") {
-        camera.position.y = 2;
-         setTimeout(function() {
-            camera.position.y = 1;
-        }, 300);
-      }
+      camera.position.y = 2;
+      setTimeout(function () {
+        camera.position.y = 1;
+      }, 300);
+    }
     if (keyMap["z"] && keyMap["d"]) {
       fps.moveForward((0.1 * speedMultiplier) / 2);
       fps.moveRight((0.1 * speedMultiplier) / 2);
