@@ -26,7 +26,7 @@ function animateBullets() {
 
     scene.add(bullet);
     const direction = bullet.userData.direction as THREE.Vector3;
-    bullet.position.add(direction.clone().multiplyScalar(0.1));
+    bullet.position.add(direction.clone().multiplyScalar(1));
 
     // setTimeout(() => {
     //   scene.remove(bullet);

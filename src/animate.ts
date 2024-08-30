@@ -9,7 +9,7 @@ const firstRoomWallRightBB = new THREE.Box3(new THREE.Vector3(), new THREE.Vecto
 const firstRoomWallLeftBB = new THREE.Box3(new THREE.Vector3(), new THREE.Vector3());
 const crouchWallBB = new THREE.Box3(new THREE.Vector3(), new THREE.Vector3());
 const shootWallBB = new THREE.Box3(new THREE.Vector3(), new THREE.Vector3());
-
+const bulletBB = new THREE.Sphere(new THREE.Vector3())
 const cameraBB = new THREE.Box3(
   new THREE.Vector3(1, 1, 1),
   new THREE.Vector3(1, 1, 1)
@@ -24,6 +24,7 @@ export function animate(
   firstRoomWallLeft: THREE.Mesh,
   crouchWall: THREE.Mesh,
   shootWall: THREE.Mesh,
+  // bulletBS: THREE.Mesh,
   camera: any
 ) {
   wallUpBB.setFromObject(wallUp, true);
@@ -34,6 +35,7 @@ export function animate(
   firstRoomWallLeftBB.setFromObject(firstRoomWallLeft, true);
   crouchWallBB.setFromObject(crouchWall, true);
   shootWallBB.setFromObject(shootWall, true);
+  // bulletBS.THREE.Sphere.applyMatrix4();
 
   cameraBB.setFromObject(camera, true);
 

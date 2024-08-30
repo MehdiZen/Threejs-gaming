@@ -1,8 +1,6 @@
 import { PointerLockControls } from "three/examples/jsm/controls/PointerLockControls";
 import * as THREE from "three";
-import { sceneSetup } from "./sceneSetup";
 export function controlsSetup(camera: THREE.PerspectiveCamera, fps: PointerLockControls) {
-  const { scene } = sceneSetup();
   // const fps = new PointerLockControls(camera, domElement);
   let speedMultiplier = 1;
   // const scene = sceneSetup().scene

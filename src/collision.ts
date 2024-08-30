@@ -10,6 +10,7 @@ export default function checkCollision(
   firstRoomWallLeftBB: THREE.Box3,
   crouchWallBB: THREE.Box3,
   shootWallBB: THREE.Box3,
+  // bulletBB: THREE.Sphere,
   cameraBB: THREE.Box3,
   camera: THREE.PerspectiveCamera
 ) {
