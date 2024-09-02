@@ -2,8 +2,12 @@ import { sceneSetup } from "./sceneSetup";
 import { controlsSetup } from "./controlsSetup";
 import * as THREE from "three";
 import { animate } from "./animate";
+import { nitrodubsteplaboucle } from "./collision";
 
-const {
+let stage = await nitrodubsteplaboucle();
+let oldStage = stage.value;
+
+let {
   scene,
   camera,
   renderer,
@@ -18,9 +22,20 @@ const {
   controls,
   bullets,
   allTargets,
-  // firstTarget
-} = sceneSetup();
+} = sceneSetup(stage);
+
 controlsSetup(camera, controls);
+
+// function disposeScene(scene: THREE.Scene) {
+//   scene.traverse((object) => {
+//     if (object instanceof THREE.Mesh) {
+//       object.geometry.dispose();
+//       if (object.material instanceof THREE.Material) {
+//         object.material.dispose();
+//       }
+//     }
+//   });
+// }
 
 function animateBullets() {
   bullets.forEach((bullet, index) => {
@@ -37,7 +52,33 @@ function animateBullets() {
   });
 }
 
-renderer.setAnimationLoop(() => {
+renderer.setAnimationLoop(async () => {
+  const newStage = await nitrodubsteplaboucle();
+  if (newStage.value > oldStage) {
+    oldStage = newStage.value;
+    
+    scene.clear();
+
+    ({
+      scene,
+      camera,
+      renderer,
+      wallUp,
+      wallBack,
+      wallLeft,
+      wallRight,
+      firstRoomWallLeft,
+      firstRoomWallRight,
+      crouchWall,
+      shootWall,
+      controls,
+      bullets,
+      allTargets,
+    } = sceneSetup(newStage));
+
+    controlsSetup(camera, controls);
+  }
+
   animate(
     scene,
     wallUp,
@@ -52,6 +93,7 @@ renderer.setAnimationLoop(() => {
     allTargets,
     camera
   );
+  
   requestAnimationFrame(animateBullets);
   renderer.render(scene, camera);
 });

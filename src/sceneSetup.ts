@@ -5,8 +5,6 @@ import { TextGeometry } from "three/examples/jsm/geometries/TextGeometry";
 // import { addSphereEntityToScene, SphereEntity } from "./entity.ts";
 // import { controlsSetup } from "./controlsSetup.ts";
 import { PointerLockControls } from "three/examples/jsm/controls/PointerLockControls";
-let stage = 1;
-
 function createTextMesh(
   text: string,
   // @ts-ignore comment
@@ -23,7 +21,7 @@ function createTextMesh(
   return new THREE.Mesh(textGeometry, material);
 }
 
-export function sceneSetup() {
+export function sceneSetup(stage: {value: number}) {
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(
     75,
@@ -58,18 +56,7 @@ export function sceneSetup() {
 
   //Targets creation
   let allTargets = [];
-  // const firstTarget: SphereEntity = addSphereEntityToScene(
-  //   scene,
-  //   new THREE.Vector3(6, 6, -35)
-  // );
-  // const secondTarget: SphereEntity = addSphereEntityToScene(
-  //   scene,
-  //   new THREE.Vector3(-12, 6, -60)
-  // );
-  // const thirdTarget: SphereEntity = addSphereEntityToScene(
-  //   scene,
-  //   new THREE.Vector3(0, 2, -35)
-  // );
+
   const targetGeometry = new THREE.SphereGeometry( 1, 36, 16 ); 
   const targetMaterial = new THREE.MeshBasicMaterial( { color: 0xff0000 } ); 
   
@@ -105,7 +92,12 @@ export function sceneSetup() {
       const textMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff });
       const mediumFont = 0.5;
       const smallFont = 0.15;
-      if (stage === 1) {
+      scene.children.forEach((child) => {
+        if (child instanceof THREE.Mesh && child.geometry instanceof TextGeometry) {
+          scene.remove(child);
+        }
+      });
+      if (stage.value === 1) {
         const wallUpText = createTextMesh(
           "Use WASD(ZQSD) to move",
           font,
@@ -122,7 +114,7 @@ export function sceneSetup() {
         );
         croucWallText.position.set(-1.2, 0, 0.6);
         crouchWall.add(croucWallText);
-      } else if (stage === 2) {
+      } else if (stage.value === 2) {
         const wallUpText = createTextMesh(
           "Deja vu ?",
           font,
@@ -131,7 +123,7 @@ export function sceneSetup() {
         );
         wallUpText.position.set(-4, 0, 0.6);
         wallUp.add(wallUpText);
-      } else if (stage === 3) {
+      } else if (stage.value === 3) {
         const wallUpText = createTextMesh(
           "You are not getting out",
           font,
@@ -143,7 +135,7 @@ export function sceneSetup() {
       }
     }
   );
-
+  // console.log(stage.value);
   const plane = new THREE.GridHelper(1200, 1200, "blue", "green");
   plane.position.set(0, -0.5, 0);
   const light = new THREE.AmbientLight(0xffffff, 1);
@@ -187,11 +179,6 @@ export function sceneSetup() {
     plane
   );
 
-  // levelOneTargets.forEach((x) => {
-  //   if (x.HP === 0) {
-  //     scene.remove(x.mesh);
-  //   }
-  // });
   return {
     scene,
     camera,
@@ -210,5 +197,6 @@ export function sceneSetup() {
     controls,
     bullets,
     allTargets,
+    
   };
 }

@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import checkCollision from "./collision";
+import checkCollision, { nitrodubsteplaboucle } from "./collision";
 
 const wallUpBB = new THREE.Box3(new THREE.Vector3(), new THREE.Vector3());
 const wallLeftBB = new THREE.Box3(new THREE.Vector3(), new THREE.Vector3());
@@ -15,7 +15,7 @@ const firstRoomWallLeftBB = new THREE.Box3(
 );
 const crouchWallBB = new THREE.Box3(new THREE.Vector3(), new THREE.Vector3());
 const shootWallBB = new THREE.Box3(new THREE.Vector3(), new THREE.Vector3());
-const bulletBS = [new THREE.Box3(new THREE.Vector3(), new THREE.Vector3())];
+const bulletBB = [new THREE.Box3(new THREE.Vector3(), new THREE.Vector3())];
 const targetBB = [new THREE.Box3(new THREE.Vector3(), new THREE.Vector3())];
 
 const cameraBB = new THREE.Box3(
@@ -45,14 +45,8 @@ export function animate(
   firstRoomWallLeftBB.setFromObject(firstRoomWallLeft, true);
   crouchWallBB.setFromObject(crouchWall, true);
   shootWallBB.setFromObject(shootWall, true);
-  bullets.forEach((bullet, index) => {
-    if (bullets.length > bulletBS.length) {
-      bulletBS.push(new THREE.Box3(new THREE.Vector3(), new THREE.Vector3()))
-    }
-    bulletBS[index].setFromObject(bullet, true);
-  });
   while (allTargets.length > targetBB.length) {
-    targetBB.push(new THREE.Box3(new THREE.Vector3(), new THREE.Vector3()))
+    targetBB.push(new THREE.Box3(new THREE.Vector3(), new THREE.Vector3()));
   }
   allTargets.forEach((target, index) => {
     targetBB[index].setFromObject(target, true);
@@ -71,9 +65,10 @@ export function animate(
     firstRoomWallLeftBB,
     crouchWallBB,
     shootWallBB,
-    bulletBS,
+    bulletBB,
     targetBB,
     cameraBB,
-    camera
+    camera,
+    bullets
   );
 }
