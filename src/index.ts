@@ -17,6 +17,8 @@ const {
   shootWall,
   controls,
   bullets,
+  allTargets,
+  // firstTarget
 } = sceneSetup();
 controlsSetup(camera, controls);
 
@@ -28,10 +30,6 @@ function animateBullets() {
     const direction = bullet.userData.direction as THREE.Vector3;
     bullet.position.add(direction.clone().multiplyScalar(1));
 
-    // setTimeout(() => {
-    //   scene.remove(bullet);
-    //   bullets.splice(index, 1);
-    // }, 8000)
     if (bullet.position.distanceTo(camera.position) > 100) {
       scene.remove(bullet);
       bullets.splice(index, 1);
@@ -41,6 +39,7 @@ function animateBullets() {
 
 renderer.setAnimationLoop(() => {
   animate(
+    scene,
     wallUp,
     wallLeft,
     wallRight,
@@ -49,6 +48,8 @@ renderer.setAnimationLoop(() => {
     firstRoomWallLeft,
     crouchWall,
     shootWall,
+    bullets,
+    allTargets,
     camera
   );
   requestAnimationFrame(animateBullets);

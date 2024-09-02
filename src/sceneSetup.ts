@@ -2,8 +2,8 @@ import * as THREE from "three";
 import { createWeapon } from "./weapon";
 import { FontLoader } from "three/examples/jsm/loaders/FontLoader";
 import { TextGeometry } from "three/examples/jsm/geometries/TextGeometry";
-import { addSphereEntityToScene, SphereEntity } from "./entity.ts";
-import { controlsSetup } from "./controlsSetup.ts";
+// import { addSphereEntityToScene, SphereEntity } from "./entity.ts";
+// import { controlsSetup } from "./controlsSetup.ts";
 import { PointerLockControls } from "three/examples/jsm/controls/PointerLockControls";
 let stage = 1;
 
@@ -31,7 +31,7 @@ export function sceneSetup() {
     0.1,
     1000
   );
-  const bullets: THREE.Mesh[] = []; 
+  const bullets: THREE.Mesh[] = [];
   const renderer = new THREE.WebGLRenderer();
   renderer.setSize(window.innerWidth, window.innerHeight);
   document.body.appendChild(renderer.domElement);
@@ -57,27 +57,27 @@ export function sceneSetup() {
   const shootWall = new THREE.Mesh(shootWallGeometry, materialGreen);
 
   //Targets creation
+  let allTargets = [];
+  // const firstTarget: SphereEntity = addSphereEntityToScene(
+  //   scene,
+  //   new THREE.Vector3(6, 6, -35)
+  // );
+  // const secondTarget: SphereEntity = addSphereEntityToScene(
+  //   scene,
+  //   new THREE.Vector3(-12, 6, -60)
+  // );
+  // const thirdTarget: SphereEntity = addSphereEntityToScene(
+  //   scene,
+  //   new THREE.Vector3(0, 2, -35)
+  // );
+  const targetGeometry = new THREE.SphereGeometry( 1, 36, 16 ); 
+  const targetMaterial = new THREE.MeshBasicMaterial( { color: 0xff0000 } ); 
+  
+  const firstTarget = new THREE.Mesh( targetGeometry, targetMaterial );
+  const secondTarget = new THREE.Mesh( targetGeometry, targetMaterial ); 
+  const thirdTarget = new THREE.Mesh( targetGeometry, targetMaterial ); 
 
-  // const targetGeometry = new THREE.SphereGeometry( 1, 36, 16 );
-  // const targetMaterial = new THREE.MeshBasicMaterial( { color: 0xff0000 } );
-
-  const firstTarget: SphereEntity = addSphereEntityToScene(
-    scene,
-    new THREE.Vector3(6, 6, -35)
-  );
-  const secondTarget: SphereEntity = addSphereEntityToScene(
-    scene,
-    new THREE.Vector3(-12, 6, -60)
-  );
-  const thirdTarget: SphereEntity = addSphereEntityToScene(
-    scene,
-    new THREE.Vector3(0, 2, -35)
-  );
-
-  // const firstTarget = new THREE.Mesh( targetGeometry, targetMaterial );
-  // const secondTarget = new THREE.Mesh( targetGeometry, targetMaterial );
-  // const thirdTarget = new THREE.Mesh( targetGeometry, targetMaterial );
-
+  allTargets.push(firstTarget, secondTarget, thirdTarget);
   const raycaster = new THREE.Raycaster();
   raycaster.ray.origin.copy(camera.position);
   camera.getWorldDirection(raycaster.ray.direction);
@@ -91,10 +91,10 @@ export function sceneSetup() {
   firstRoomWallRight.position.set(6.5, 0.5, 5);
   crouchWall.position.set(-5, 1, -5);
   shootWall.position.set(-5, 0.05, -10);
-  // Targets
-  // firstTarget.position.set(-6, 6, -35 )
-  // secondTarget.position.set(-12, 6, -60 )
-  // thirdTarget.position.set(0, 2, -35 )
+
+  firstTarget.position.set(6, 6, -35)
+  secondTarget.position.set(-12, 6, -60)
+  thirdTarget.position.set(0, 2, -35)
 
   const levelOneTargets = [];
   levelOneTargets.push(firstTarget, secondTarget, thirdTarget);
@@ -154,19 +154,18 @@ export function sceneSetup() {
 
   const fullWeapon = createWeapon();
   camera.add(...fullWeapon);
- // Le cauchemar
+  // Le cauchemar
   const cameraDirection = new THREE.Vector3();
   const controls = new PointerLockControls(camera, renderer.domElement);
 
   document.body.addEventListener("click", () => {
-    controls.getObject().getWorldDirection(cameraDirection)
+    controls.getObject().getWorldDirection(cameraDirection);
     let bullet = new THREE.Mesh(
       new THREE.SphereGeometry(0.05, 16, 16),
       new THREE.MeshBasicMaterial({ color: 0x00ff00 })
     );
     bullet.position.copy(controls.getObject().position.clone());
-    bullet.position.add(cameraDirection.clone().multiplyScalar(0.11)); 
-
+    bullet.position.add(cameraDirection.clone().multiplyScalar(0.11));
 
     bullet.userData = { direction: cameraDirection.clone().normalize() };
 
@@ -184,14 +183,15 @@ export function sceneSetup() {
     firstRoomWallRight,
     crouchWall,
     shootWall,
+    ...allTargets,
     plane
   );
 
-  levelOneTargets.forEach((x) => {
-    if (x.HP === 0) {
-      scene.remove(x.mesh);
-    }
-  });
+  // levelOneTargets.forEach((x) => {
+  //   if (x.HP === 0) {
+  //     scene.remove(x.mesh);
+  //   }
+  // });
   return {
     scene,
     camera,
@@ -208,6 +208,7 @@ export function sceneSetup() {
     ...fullWeapon,
     ...levelOneTargets,
     controls,
-    bullets
+    bullets,
+    allTargets,
   };
 }
