@@ -1,12 +1,13 @@
-import { sceneSetup } from "./sceneSetup";
+import clearPlease, { sceneSetup } from "./sceneSetup";
 import { controlsSetup } from "./controlsSetup";
 import * as THREE from "three";
 import { animate } from "./animate";
 import { nitrodubsteplaboucle } from "./collision";
+import { createWeapon } from "./weapon";
 
 let stage = await nitrodubsteplaboucle();
 let oldStage = stage.value;
-
+let clear = false;
 let {
   scene,
   camera,
@@ -26,17 +27,6 @@ let {
 
 controlsSetup(camera, controls);
 
-// function disposeScene(scene: THREE.Scene) {
-//   scene.traverse((object) => {
-//     if (object instanceof THREE.Mesh) {
-//       object.geometry.dispose();
-//       if (object.material instanceof THREE.Material) {
-//         object.material.dispose();
-//       }
-//     }
-//   });
-// }
-
 function animateBullets() {
   bullets.forEach((bullet, index) => {
     if (!bullet.userData.direction) return;
@@ -55,14 +45,13 @@ function animateBullets() {
 renderer.setAnimationLoop(async () => {
   const newStage = await nitrodubsteplaboucle();
   if (newStage.value > oldStage) {
+    clearPlease();
     oldStage = newStage.value;
-    
-    scene.clear();
-
+    console.log(oldStage, newStage.value);
     ({
       scene,
       camera,
-      renderer,
+      // renderer,
       wallUp,
       wallBack,
       wallLeft,
@@ -75,10 +64,10 @@ renderer.setAnimationLoop(async () => {
       bullets,
       allTargets,
     } = sceneSetup(newStage));
-
     controlsSetup(camera, controls);
   }
 
+  clear = false;
   animate(
     scene,
     wallUp,
@@ -93,7 +82,6 @@ renderer.setAnimationLoop(async () => {
     allTargets,
     camera
   );
-  
   requestAnimationFrame(animateBullets);
   renderer.render(scene, camera);
 });

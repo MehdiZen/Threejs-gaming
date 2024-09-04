@@ -5,6 +5,8 @@ import { TextGeometry } from "three/examples/jsm/geometries/TextGeometry";
 // import { addSphereEntityToScene, SphereEntity } from "./entity.ts";
 // import { controlsSetup } from "./controlsSetup.ts";
 import { PointerLockControls } from "three/examples/jsm/controls/PointerLockControls";
+let scene: THREE.Scene;
+scene = new THREE.Scene() || null;
 function createTextMesh(
   text: string,
   // @ts-ignore comment
@@ -21,8 +23,8 @@ function createTextMesh(
   return new THREE.Mesh(textGeometry, material);
 }
 
-export function sceneSetup(stage: {value: number}) {
-  const scene = new THREE.Scene();
+export function sceneSetup(stage: { value: number }) {
+  
   const camera = new THREE.PerspectiveCamera(
     75,
     window.innerWidth / window.innerHeight,
@@ -57,12 +59,12 @@ export function sceneSetup(stage: {value: number}) {
   //Targets creation
   let allTargets = [];
 
-  const targetGeometry = new THREE.SphereGeometry( 1, 36, 16 ); 
-  const targetMaterial = new THREE.MeshBasicMaterial( { color: 0xff0000 } ); 
-  
-  const firstTarget = new THREE.Mesh( targetGeometry, targetMaterial );
-  const secondTarget = new THREE.Mesh( targetGeometry, targetMaterial ); 
-  const thirdTarget = new THREE.Mesh( targetGeometry, targetMaterial ); 
+  const targetGeometry = new THREE.SphereGeometry(1, 36, 16);
+  const targetMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+
+  const firstTarget = new THREE.Mesh(targetGeometry, targetMaterial);
+  const secondTarget = new THREE.Mesh(targetGeometry, targetMaterial);
+  const thirdTarget = new THREE.Mesh(targetGeometry, targetMaterial);
 
   allTargets.push(firstTarget, secondTarget, thirdTarget);
   const raycaster = new THREE.Raycaster();
@@ -79,9 +81,9 @@ export function sceneSetup(stage: {value: number}) {
   crouchWall.position.set(-5, 1, -5);
   shootWall.position.set(-5, 0.05, -10);
 
-  firstTarget.position.set(6, 6, -35)
-  secondTarget.position.set(-12, 6, -60)
-  thirdTarget.position.set(0, 2, -35)
+  firstTarget.position.set(6, 6, -35);
+  secondTarget.position.set(-12, 6, -60);
+  thirdTarget.position.set(0, 2, -35);
 
   const levelOneTargets = [];
   levelOneTargets.push(firstTarget, secondTarget, thirdTarget);
@@ -92,11 +94,17 @@ export function sceneSetup(stage: {value: number}) {
       const textMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff });
       const mediumFont = 0.5;
       const smallFont = 0.15;
-      scene.children.forEach((child) => {
-        if (child instanceof THREE.Mesh && child.geometry instanceof TextGeometry) {
-          scene.remove(child);
-        }
-      });
+      if (scene) {
+        scene.children.forEach((child) => {
+          if (
+            child instanceof THREE.Mesh &&
+            child.geometry instanceof TextGeometry
+          ) {
+            if (scene)
+               scene.remove(child);
+          }
+        });
+      }
       if (stage.value === 1) {
         const wallUpText = createTextMesh(
           "Use WASD(ZQSD) to move",
@@ -154,7 +162,7 @@ export function sceneSetup(stage: {value: number}) {
     controls.getObject().getWorldDirection(cameraDirection);
     let bullet = new THREE.Mesh(
       new THREE.SphereGeometry(0.05, 16, 16),
-      new THREE.MeshBasicMaterial({ color: 0x00ff00 })
+      new THREE.MeshBasicMaterial({ color: 0xffff00 })
     );
     bullet.position.copy(controls.getObject().position.clone());
     bullet.position.add(cameraDirection.clone().multiplyScalar(0.11));
@@ -163,22 +171,20 @@ export function sceneSetup(stage: {value: number}) {
 
     bullets.push(bullet);
   });
-
-  scene.add(
-    camera,
-    light,
-    wallUp,
-    wallBack,
-    wallLeft,
-    wallRight,
-    firstRoomWallLeft,
-    firstRoomWallRight,
-    crouchWall,
-    shootWall,
-    ...allTargets,
-    plane
-  );
-
+    scene.add(
+      camera,
+      light,
+      wallUp,
+      wallBack,
+      wallLeft,
+      wallRight,
+      firstRoomWallLeft,
+      firstRoomWallRight,
+      crouchWall,
+      shootWall,
+      ...allTargets,
+      plane
+    );
   return {
     scene,
     camera,
@@ -197,6 +203,11 @@ export function sceneSetup(stage: {value: number}) {
     controls,
     bullets,
     allTargets,
-    
   };
+}
+
+
+export default function clearPlease(){
+  scene.clear();
+  return true;
 }

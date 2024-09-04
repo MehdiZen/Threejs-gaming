@@ -1,9 +1,7 @@
 import { PointerLockControls } from "three/examples/jsm/controls/PointerLockControls";
 import * as THREE from "three";
 export function controlsSetup(camera: THREE.PerspectiveCamera, fps: PointerLockControls) {
-  // const fps = new PointerLockControls(camera, domElement);
   let speedMultiplier = 1;
-  // const scene = sceneSetup().scene
 
   const keyMap: { [key: string]: boolean } = {};
 
@@ -64,20 +62,3 @@ export function controlsSetup(camera: THREE.PerspectiveCamera, fps: PointerLockC
 
   return {fps};
 }
-
-// export  function fire(camera: THREE.PerspectiveCamera, domElement: HTMLElement){
-//   const { scene } = sceneSetup();
-//   const fps = new PointerLockControls(camera, domElement);
-
-//   if(fps.isLocked){
-//     let bullet = new THREE.Mesh(
-//       new THREE.SphereGeometry(0.5, 16, 16),
-//       new THREE.MeshBasicMaterial({ color: 0x00ff00 })
-//     );
-//     bullet.position.set(2, 2, 2)
-//     scene.add(bullet)
-//     setTimeout(() => {
-//       scene.remove(bullet)
-//     }, 1000)
-//   }
-// }
