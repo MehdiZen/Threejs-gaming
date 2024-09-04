@@ -1,0 +1,34 @@
+[
+  {
+    "wallUpMessage": "Use WASD(ZQSD) to move",
+    "crouchWallMessage": "Ctrl to crouch, friend"
+  },
+  {
+    "wallUpMessage": "Deja vu ? :-)",
+    "crouchWallMessage": "Weird, isn't it?"
+  },
+  {
+    "wallUpMessage": "You are not getting out",
+    "crouchWallMessage": "Murderer"
+  },
+  {
+    "wallUpMessage": "MURDERER MURDERER",
+    "crouchWallMessage": "Murderer"
+  },
+  {
+    "wallUpMessage": "Remember the names",
+    "crouchWallMessage": "Lena"
+  },
+  {
+    "wallUpMessage": "Remember the names",
+    "crouchWallMessage": "Clara"
+  },
+  {
+    "wallUpMessage": "Remember the names",
+    "crouchWallMessage": "Elise"
+  },
+  {
+    "wallUpMessage": "Three names",
+    "crouchWallMessage": "Three targets"
+  }
+]

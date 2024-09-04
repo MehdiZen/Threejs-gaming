@@ -27,7 +27,6 @@ class Entity implements IEntity {
   }
 
   onDeath() {
-    console.log("Entity died");
   }
 }
 
@@ -43,7 +42,6 @@ export class SphereEntity extends Entity {
 
   onDeath() {
     super.onDeath();
-    console.log("SphereEntity destroyed");
   }
 }
 

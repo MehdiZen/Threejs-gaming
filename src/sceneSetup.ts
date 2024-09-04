@@ -4,9 +4,23 @@ import { FontLoader } from "three/examples/jsm/loaders/FontLoader";
 import { TextGeometry } from "three/examples/jsm/geometries/TextGeometry";
 // import { addSphereEntityToScene, SphereEntity } from "./entity.ts";
 // import { controlsSetup } from "./controlsSetup.ts";
+
 import { PointerLockControls } from "three/examples/jsm/controls/PointerLockControls";
 let scene: THREE.Scene;
 scene = new THREE.Scene() || null;
+let dataScript: [
+  {
+    wallUpMessage: string;
+    crouchWallMessage: string;
+  }
+];
+
+fetch("src/textStage.json")
+  .then((response) => response.json())
+  .then((data) => {
+    dataScript = data; 
+  })
+
 function createTextMesh(
   text: string,
   // @ts-ignore comment
@@ -24,7 +38,6 @@ function createTextMesh(
 }
 
 export function sceneSetup(stage: { value: number }) {
-  
   const camera = new THREE.PerspectiveCamera(
     75,
     window.innerWidth / window.innerHeight,
@@ -100,50 +113,28 @@ export function sceneSetup(stage: { value: number }) {
             child instanceof THREE.Mesh &&
             child.geometry instanceof TextGeometry
           ) {
-            if (scene)
-               scene.remove(child);
+            if (scene) scene.remove(child);
           }
         });
       }
-      if (stage.value === 1) {
-        const wallUpText = createTextMesh(
-          "Use WASD(ZQSD) to move",
-          font,
-          textMaterial,
-          mediumFont
-        );
-        wallUpText.position.set(-4, 0, 0.6);
-        wallUp.add(wallUpText);
-        const croucWallText = createTextMesh(
-          "Ctrl to crouch, friend",
-          font,
-          textMaterial,
-          smallFont
-        );
-        croucWallText.position.set(-1.2, 0, 0.6);
-        crouchWall.add(croucWallText);
-      } else if (stage.value === 2) {
-        const wallUpText = createTextMesh(
-          "Deja vu ?",
-          font,
-          textMaterial,
-          mediumFont
-        );
-        wallUpText.position.set(-4, 0, 0.6);
-        wallUp.add(wallUpText);
-      } else if (stage.value === 3) {
-        const wallUpText = createTextMesh(
-          "You are not getting out",
-          font,
-          textMaterial,
-          mediumFont
-        );
-        wallUpText.position.set(-4, 0, 0.6);
-        wallUp.add(wallUpText);
-      }
+      const wallUpText = createTextMesh(
+        dataScript[stage.value-1].wallUpMessage,
+        font,
+        textMaterial,
+        mediumFont
+      );
+      wallUpText.position.set(-4, 0, 0.6);
+      wallUp.add(wallUpText);
+      const croucWallText = createTextMesh(
+        dataScript[stage.value-1].crouchWallMessage,
+        font,
+        textMaterial,
+        smallFont
+      );
+      croucWallText.position.set(-1.2, 0, 0.6);
+      crouchWall.add(croucWallText);
     }
   );
-  // console.log(stage.value);
   const plane = new THREE.GridHelper(1200, 1200, "blue", "green");
   plane.position.set(0, -0.5, 0);
   const light = new THREE.AmbientLight(0xffffff, 1);
@@ -171,20 +162,20 @@ export function sceneSetup(stage: { value: number }) {
 
     bullets.push(bullet);
   });
-    scene.add(
-      camera,
-      light,
-      wallUp,
-      wallBack,
-      wallLeft,
-      wallRight,
-      firstRoomWallLeft,
-      firstRoomWallRight,
-      crouchWall,
-      shootWall,
-      ...allTargets,
-      plane
-    );
+  scene.add(
+    camera,
+    light,
+    wallUp,
+    wallBack,
+    wallLeft,
+    wallRight,
+    firstRoomWallLeft,
+    firstRoomWallRight,
+    crouchWall,
+    shootWall,
+    ...allTargets,
+    plane
+  );
   return {
     scene,
     camera,
@@ -206,8 +197,7 @@ export function sceneSetup(stage: { value: number }) {
   };
 }
 
-
-export default function clearPlease(){
+export default function clearPlease() {
   scene.clear();
   return true;
 }

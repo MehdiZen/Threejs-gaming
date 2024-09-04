@@ -80,7 +80,6 @@ export default function checkCollision(
 }
 
 export function nitrodubsteplaboucle(): Promise<{ value: number }> {
-  // console.log(stage.value);
   return new Promise((resolve) => {
     resolve(stage);
   });

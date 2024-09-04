@@ -3,7 +3,6 @@ import { controlsSetup } from "./controlsSetup";
 import * as THREE from "three";
 import { animate } from "./animate";
 import { nitrodubsteplaboucle } from "./collision";
-import { createWeapon } from "./weapon";
 
 let stage = await nitrodubsteplaboucle();
 let oldStage = stage.value;
@@ -47,11 +46,9 @@ renderer.setAnimationLoop(async () => {
   if (newStage.value > oldStage) {
     clearPlease();
     oldStage = newStage.value;
-    console.log(oldStage, newStage.value);
     ({
       scene,
       camera,
-      // renderer,
       wallUp,
       wallBack,
       wallLeft,
@@ -65,6 +62,7 @@ renderer.setAnimationLoop(async () => {
       allTargets,
     } = sceneSetup(newStage));
     controlsSetup(camera, controls);
+    document.body.click();
   }
 
   clear = false;
