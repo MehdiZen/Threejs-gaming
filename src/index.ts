@@ -64,7 +64,7 @@ renderer.setAnimationLoop(async () => {
     controlsSetup(camera, controls);
     document.body.click();
   }
-
+  
   clear = false;
   animate(
     scene,

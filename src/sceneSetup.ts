@@ -18,8 +18,8 @@ let dataScript: [
 fetch("src/textStage.json")
   .then((response) => response.json())
   .then((data) => {
-    dataScript = data; 
-  })
+    dataScript = data;
+  });
 
 function createTextMesh(
   text: string,
@@ -118,7 +118,7 @@ export function sceneSetup(stage: { value: number }) {
         });
       }
       const wallUpText = createTextMesh(
-        dataScript[stage.value-1].wallUpMessage,
+        dataScript[stage.value - 1].wallUpMessage,
         font,
         textMaterial,
         mediumFont
@@ -126,7 +126,7 @@ export function sceneSetup(stage: { value: number }) {
       wallUpText.position.set(-4, 0, 0.6);
       wallUp.add(wallUpText);
       const croucWallText = createTextMesh(
-        dataScript[stage.value-1].crouchWallMessage,
+        dataScript[stage.value - 1].crouchWallMessage,
         font,
         textMaterial,
         smallFont
@@ -144,7 +144,9 @@ export function sceneSetup(stage: { value: number }) {
   flashlight.target.updateMatrixWorld();
 
   const fullWeapon = createWeapon();
-  camera.add(...fullWeapon);
+  if(stage.value < 8)
+    camera.add(...fullWeapon);
+
   // Le cauchemar
   const cameraDirection = new THREE.Vector3();
   const controls = new PointerLockControls(camera, renderer.domElement);
@@ -176,6 +178,24 @@ export function sceneSetup(stage: { value: number }) {
     ...allTargets,
     plane
   );
+
+  if ((stage.value === 8)) {
+    clearPlease();
+    const textureLoader = new THREE.TextureLoader();
+    textureLoader.load("src/assets/enfaitclejoueurlemechant.jpg", (texture) => {
+      const planeGeometry = new THREE.PlaneGeometry(3, 1);
+      const planeMaterial = new THREE.MeshBasicMaterial({
+        map: texture,
+        transparent: false,
+      });
+      const plane = new THREE.Mesh(planeGeometry, planeMaterial);
+
+      plane.position.set(0, 0, -1);
+      camera.add(plane);
+      scene.add(camera);
+    });
+  }
+
   return {
     scene,
     camera,

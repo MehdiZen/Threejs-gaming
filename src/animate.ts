@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import checkCollision, { nitrodubsteplaboucle } from "./collision";
+import checkCollision from "./collision";
 
 const wallUpBB = new THREE.Box3(new THREE.Vector3(), new THREE.Vector3());
 const wallLeftBB = new THREE.Box3(new THREE.Vector3(), new THREE.Vector3());
