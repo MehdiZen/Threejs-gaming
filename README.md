@@ -1,7 +1,7 @@
 # No Escape
 
-FPS narratif dans le navigateur. **Three.js · TypeScript · Vite**, sans moteur de jeu et sans
-modèle 3D importé.
+FPS narratif dans le navigateur. **Three.js · TypeScript · Vite**, sans moteur de jeu, sans
+modèle 3D et sans asset téléchargé.
 
 ---
 
@@ -26,11 +26,12 @@ un palier à la narration, c'est ajouter une entrée.
 
 ---
 
-## Tout est construit en code
+## Tout est fabriqué ici
 
-Aucun moteur, aucun framework de jeu, et **aucune géométrie importée**. Il n'y a pas un seul
-`.gltf`, `.obj` ou sprite dans ce dépôt : tout ce qui est visible à l'écran est assemblé à
-partir de primitives Three.js et positionné à la main.
+Aucun moteur, aucun framework de jeu, **aucune géométrie importée et aucun asset téléchargé**.
+Pas un `.gltf`, pas un `.obj`, pas un sprite, pas une texture récupérée quelque part : tout ce
+qui apparaît à l'écran est soit assemblé à partir de primitives Three.js, soit dessiné à la
+main.
 
 Les murs sont des `BoxGeometry` aux dimensions choisies une par une. Les cibles et les balles
 sont des `SphereGeometry`. Le sol est un `GridHelper`. Les textes muraux sont des
@@ -42,8 +43,7 @@ peine plus grandes rendues en `THREE.BackSide`, qui n'apparaissent que là où e
 Résultat, un contour noir net autour de chaque volume. C'est un cel-shading obtenu sans écrire
 une ligne de shader et sans charger le moindre modèle.
 
-La seule image du projet est celle de l'écran final. Le dossier `src/skybox/` contient des
-textures qui ne sont utilisées nulle part, reliquat d'une piste abandonnée.
+Le seul fichier image du projet est l'écran de fin. Il est dessiné sous Paint.
 
 ---
 
