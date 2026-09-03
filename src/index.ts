@@ -4,7 +4,7 @@ import * as THREE from "three";
 import { animate } from "./animate";
 import { nitrodubsteplaboucle } from "./collision";
 
-let stage = await nitrodubsteplaboucle();
+let stage = nitrodubsteplaboucle();
 let oldStage = stage.value;
 let clear = false;
 let {
@@ -41,8 +41,8 @@ function animateBullets() {
   });
 }
 
-renderer.setAnimationLoop(async () => {
-  const newStage = await nitrodubsteplaboucle();
+renderer.setAnimationLoop(() => {
+  const newStage = nitrodubsteplaboucle();
   if (newStage.value > oldStage) {
     clearPlease();
     oldStage = newStage.value;
